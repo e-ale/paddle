@@ -1,0 +1,44 @@
+From 83c99f2b51c1816bc31696c3eaeeee3095393f24 Mon Sep 17 00:00:00 2001
+From: Matt Porter <mporter@konsulko.com>
+Date: Sun, 21 Oct 2018 01:36:49 -0400
+Subject: [PATCH] pocketbeagle: add e-ale paddle device and gpio pinmux
+
+Add a single-axis joystick device consisting of an iio channel
+for the thumbwheel and a gpio resource for the joystick button.
+
+Signed-off-by: Matt Porter <mporter@konsulko.com>
+---
+ arch/arm/boot/dts/am335x-pocketbeagle.dts | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/arch/arm/boot/dts/am335x-pocketbeagle.dts b/arch/arm/boot/dts/am335x-pocketbeagle.dts
+index 8ff502a5a7dd..a96050518834 100644
+--- a/arch/arm/boot/dts/am335x-pocketbeagle.dts
++++ b/arch/arm/boot/dts/am335x-pocketbeagle.dts
+@@ -57,9 +57,23 @@
+ 		regulator-min-microvolt = <3300000>;
+ 		regulator-max-microvolt = <3300000>;
+ 	};
++
++	paddle {
++		compatible = "e-ale,baconbits-paddle";
++		pinctrl-0 = <&gpio1_13_pin>;
++		io-channels = <&am335x_adc 0>;
++		io-channel-names = "thumbwheel";
++		button-gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
++	};
+ };
+ 
+ &am33xx_pinmux {
++	gpio1_13_pin: pinmux-gpio1-13-pin {
++		pinctrl-single,pins = <
++			AM33XX_IOPAD(0x0834, PIN_INPUT | MUX_MODE7)
++		>;
++	};
++
+ 	i2c2_pins: pinmux-i2c2-pins {
+ 		pinctrl-single,pins = <
+ 			AM33XX_IOPAD(0x97c, PIN_INPUT_PULLUP | MUX_MODE3)	/* (D17) uart1_rtsn.I2C2_SCL */
+-- 
+2.11.0
+

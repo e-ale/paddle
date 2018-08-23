@@ -1,0 +1,39 @@
+/*
+ * BaconBits paddle game controller overlay
+ * Version for the beagleboard.org kernel
+ *
+ * Copyright 2018 Konsulko Group
+ * Matt Porter <mporter@konsulko.com>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation version 2.
+ *
+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+ * kind, whether express or implied; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/gpio/gpio.h>
+
+/ {
+	fragment@0 {
+		target = <&ocp>;
+		__overlay__ {
+			P2_33_pinmux { status = "disabled"; };	/* USR - gpio1_13 */
+			cape-universal { status = "disabled"; };
+
+			paddle {
+				compatible = "e-ale,baconbits-paddle";
+				pinctrl-0 = <&P2_33_gpio_pin>;
+				io-channels = <&am335x_adc 0>;
+				io-channel-names = "thumbwheel";
+				button-gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
+			};
+		};
+	};
+};
